@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Webgem - Flower Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-pink-50">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // 🌸 Product list with stable Pexels images
+    const products = [
+      { id: 1, name: "Red Roses", price: 29.99, category: "Valentine", img: "https://images.pexels.com/photos/931177/pexels-photo-931177.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 2, name: "White Lilies", price: 24.99, category: "Wedding", img: "https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 3, name: "Tulip Bouquet", price: 19.99, category: "Birthday", img: "https://images.pexels.com/photos/931158/pexels-photo-931158.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 4, name: "Orchid Pot", price: 34.99, category: "Anniversary", img: "https://images.pexels.com/photos/1070894/pexels-photo-1070894.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 5, name: "Sunflowers", price: 22.99, category: "Birthday", img: "https://images.pexels.com/photos/1477166/pexels-photo-1477166.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 6, name: "Peonies", price: 39.99, category: "Wedding", img: "https://images.pexels.com/photos/931180/pexels-photo-931180.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 7, name: "Lavender", price: 15.99, category: "Anniversary", img: "https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 8, name: "Daisy Delight", price: 18.99, category: "Birthday", img: "https://images.pexels.com/photos/36764/marguerite-daisy-beautiful-beauty.jpg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 9, name: "Carnation Mix", price: 21.99, category: "Valentine", img: "https://images.pexels.com/photos/931159/pexels-photo-931159.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 10, name: "Hydrangea", price: 32.99, category: "Wedding", img: "https://images.pexels.com/photos/618833/pexels-photo-618833.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 11, name: "Cherry Blossom", price: 27.99, category: "Spring", img: "https://images.pexels.com/photos/977737/pexels-photo-977737.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      { id: 12, name: "Mixed Bouquet", price: 25.99, category: "All", img: "https://images.pexels.com/photos/2098151/pexels-photo-2098151.jpeg?auto=compress&cs=tinysrgb&w=600" },
+    ];
+
+    function App() {
+      const [cart, setCart] = useState([]);
+      const [cartOpen, setCartOpen] = useState(false);
+      const [filter, setFilter] = useState("All");
+
+      const addToCart = (p) => setCart([...cart, p]);
+      const removeFromCart = (i) => setCart(cart.filter((_, idx) => idx !== i));
+      const total = cart.reduce((sum, p) => sum + p.price, 0).toFixed(2);
+
+      const categories = ["All", "Birthday", "Wedding", "Valentine", "Anniversary", "Spring"];
+      const filteredProducts = filter === "All" ? products : products.filter(p => p.category === filter);
+
+      return (
+        <div className="min-h-screen flex flex-col">
+          {/* Navbar */}
+          <nav className="flex justify-between items-center p-6 bg-pink-100 shadow">
+            <h1 className="text-2xl font-bold text-pink-600">🌸 Webgem</h1>
+            <button onClick={() => setCartOpen(true)} className="bg-pink-500 text-white px-4 py-2 rounded-lg">
+              🛒 Cart ({cart.length})
+            </button>
+          </nav>
+
+          {/* Hero */}
+          <header className="bg-pink-200 text-center py-16 px-4">
+            <h2 className="text-4xl font-bold mb-4">Fresh Flowers Delivered Daily</h2>
+            <p className="mb-6 text-lg">Shop bouquets for every occasion</p>
+            <a href="#shop" className="bg-pink-600 text-white px-6 py-3 rounded-lg shadow hover:bg-pink-700">
+              Shop Now
+            </a>
+          </header>
+
+          {/* Category Filters */}
+          <div className="flex justify-center flex-wrap gap-3 my-6">
+            {categories.map(c => (
+              <button
+                key={c}
+                onClick={() => setFilter(c)}
+                className={`px-4 py-2 rounded-full ${filter === c ? "bg-pink-600 text-white" : "bg-pink-100 text-pink-700 hover:bg-pink-200"}`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+
+          {/* Products */}
+          <main id="shop" className="flex-1 p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredProducts.map((p) => (
+              <div key={p.id} className="bg-white rounded-xl shadow hover:shadow-lg transition p-4 flex flex-col">
+                <img src={p.img} alt={p.name} className="rounded-lg w-full h-72 object-cover mb-4" />
+                <h3 className="font-semibold text-lg">{p.name}</h3>
+                <p className="text-pink-600 font-bold">${p.price}</p>
+                <button onClick={() => addToCart(p)} className="mt-auto bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600">
+                  Add to Cart
+                </button>
+              </div>
+            ))}
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-pink-100 text-center py-6 mt-8">
+            <p>© 2025 webgem | Fresh Flowers with Love 🌷</p>
+          </footer>
+
+          {/* Cart */}
+          {cartOpen && (
+            <div className="fixed top-0 right-0 w-80 h-full bg-white shadow-lg p-6 flex flex-col">
+              <button onClick={() => setCartOpen(false)} className="mb-4 bg-pink-500 text-white px-3 py-1 rounded">
+                Close ✖
+              </button>
+              <h3 className="text-xl font-bold mb-4">Your Cart</h3>
+              {cart.length === 0 ? <p>No items yet.</p> : (
+                <ul className="flex-1 space-y-3 overflow-y-auto">
+                  {cart.map((item, i) => (
+                    <li key={i} className="flex justify-between items-center bg-pink-50 p-2 rounded">
+                      <span>{item.name}</span>
+                      <div className="flex items-center gap-2">
+                        <span>${item.price}</span>
+                        <button onClick={() => removeFromCart(i)} className="text-red-500">🗑</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="mt-4">
+                <p className="font-bold">Total: ${total}</p>
+                <button className="mt-2 w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700">
+                  Checkout
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
+
